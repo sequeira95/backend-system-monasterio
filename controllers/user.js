@@ -1,0 +1,1 @@
+import { clienDb } from '../index'
