@@ -1,9 +1,9 @@
 import express from 'express'
-import { getEmpresas, createEmpresa } from '../controllers/empresas.js'
+import { getSubDominios, createSubDominio } from '../controllers/subDominios.js'
 
 const router = express.Router()
 
-router.get('/', getEmpresas)
-router.post('/', createEmpresa)
+router.get('/', getSubDominios)
+router.post('/', createSubDominio)
 
 export default router

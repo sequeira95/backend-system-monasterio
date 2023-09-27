@@ -5,8 +5,9 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import empresasRouter from './routes/empresas.js'
 import authRouter from './routes/auth.js'
+import rolsRouter from './routes/rols.js'
 
-export const clienDb = await database.db(process.env.DB_NAME)
+export const clientDb = await database.db(process.env.DB_NAME)
 const app = express()
 app.disable('x-powered-by')
 app.use(
@@ -19,5 +20,6 @@ app.use(express.json())
 app.use(cookieParser())
 app.use('/api/v1/empresas', empresasRouter)
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/rols', rolsRouter)
 
 app.listen(PORT, () => console.log('http://localhost:' + PORT))

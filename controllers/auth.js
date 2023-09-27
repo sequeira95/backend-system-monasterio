@@ -1,11 +1,11 @@
-import { clienDb } from '../index.js'
+import { clientDb } from '../index.js'
 import { generateRefreshToken, generateToken } from '../utils/generateToken.js'
 import { comparePassword } from '../utils/hashPassword.js'
 
 export const login = async (req, res) => {
   const { email, password } = req.body
   try {
-    const usuariosCollection = await clienDb.collection('usuarios')
+    const usuariosCollection = await clientDb.collection('usuarios')
     const usuario = await usuariosCollection.findOne({ email })
     // en caso de que no exista el email , retornamos un error
     if (!usuario) return res.status(403).json({ error: 'Usuario o contraseña incorrecto' })
@@ -24,7 +24,7 @@ export const login = async (req, res) => {
 }
 export const refreshToken = async (req, res) => {
   try {
-    const usuariosCollection = await clienDb.collection('usuarios')
+    const usuariosCollection = await clientDb.collection('usuarios')
     const usuario = await usuariosCollection.findOne({ _id: req.uid })
     const { token, expiresIn } = generateToken(req.uid)
     delete usuario.password

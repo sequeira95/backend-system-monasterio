@@ -1,1 +1,1 @@
-import { clienDb } from '../index'
+import { clientDb } from '../index.js'

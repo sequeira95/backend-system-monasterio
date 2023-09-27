@@ -1,23 +1,24 @@
-import { clienDb } from '../index.js'
+import { clientDb } from '../index.js'
 import crypto from 'node:crypto'
 import { encryptPassword } from '../utils/hashPassword.js'
 import { senEmail } from '../utils/nodemailsConfing.js'
+// import { formatCollectionName } from '../utils/formatCollectionName.js'
 
-export const getEmpresas = async (req, res) => {
+export const getSubDominios = async (req, res) => {
   try {
-    const empresasCollection = await clienDb.collection('empresas')
-    const empresas = await empresasCollection.find().toArray()
-    return res.status(200).json(empresas)
+    const subDominiosCollection = await clientDb.collection('sub-dominios')
+    const subDominios = await subDominiosCollection.find().toArray()
+    return res.status(200).json(subDominios)
   } catch (e) {
     console.log(e)
     return res.status(500).json({ error: 'Error de servidor' })
   }
 }
 
-export const createEmpresa = async (req, res) => {
+export const createSubDominio = async (req, res) => {
   try {
-    const { subDominio, nombreEmpresa, rif, email } = req.body
-    const subDominiosCollection = await clienDb.collection('sub-dominios')
+    const { subDominio, nombreEmpresa, rif, email/* , nombreUsuario */ } = req.body
+    const subDominiosCollection = await clientDb.collection('sub-dominios')
     // buscamos si el sub-dominio ya existe
     const verifySubDominio = await subDominiosCollection.findOne({ subDominio })
     // en caso de que exista, retornamos un error
@@ -28,7 +29,7 @@ export const createEmpresa = async (req, res) => {
     if (verifyEmail) return res.status(400).json({ error: 'El email ya existe' })
     // en caso de que no exista, insertamos el sub-dominio
     const empresa = await subDominiosCollection.insertOne({ subDominio, nombreEmpresa, rif, email })
-    const usuariosCollection = await clienDb.collection('usuarios')
+    const usuariosCollection = await clientDb.collection('usuarios')
     // generamos un password aleatorio
     const randomPassword = crypto.randomBytes(10).toString('hex')
     // encriptamos el password
@@ -53,7 +54,17 @@ export const createEmpresa = async (req, res) => {
       `
     }
     await senEmail(emailConfing)
-    return res.status(200).json({ empresa, usuario })
+    // enviromentEmpresa = nombre del sub dominio o del enviroment de sub dominio
+    // nameCollection = nombre de la coleccion de la empresa
+    /* const subDominioPersonasCollectionsName = formatCollectionName({ enviromentEmpresa: subDominio, nameCollection: 'personas' })
+    const subDominioPersonasCollections = await clientDb.collection(subDominioPersonasCollectionsName)
+    await subDominioPersonasCollections.insertOne({
+      nombreUsuario,
+      email,
+      telefono,
+    }) */
+
+    return res.status(200).json({ status: 'sub dominio y usuario creado' })
   } catch (e) {
     console.log(e)
     return res.status(500).json({ error: 'Error de servidor' })
